@@ -55,7 +55,7 @@ barbers to manage their schedules and view business statistics through an integr
 
 ## Project Structure
 ```
-  barber-booking-app/
+barber-booking-app/
 ├── app.py
 ├── auth.py
 ├── appointments.py
