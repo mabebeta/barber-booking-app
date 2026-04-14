@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Alfredo's Barber{% endblock %}
+
+{% block content %}
+
+<div class="auth-wrap">
+    
+    <div class="card form-card">
+		<h2>Create Account</h2>
+
+		{% with messages = get_flashed_messages(with_categories=true) %}
+			{% if messages %}
+				{% for category, message in messages %}
+					<div class="flash {{ category }}">{{ message }}</div>
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
+
+		<form method="POST" class="auth-form">
+
+			<label>First Name</label>
+			<input type="text" name="first_name" required><br><br>
+
+			<label>Last Name</label>
+			<input type="text" name="last_name" required><br><br>
+
+			<label>Email</label>
+			<input type="email" name="email" required><br><br>
+
+			<label>Phone (optional)</label>
+			<input type="tel" name="phone"><br><br>
+
+			<label>Birth Date</label>
+			<input type="date" name="birth_date" required><br><br>
+
+			<label>Username</label>
+			<input type="text" name="username" required><br><br>
+
+			<label>Password</label>
+			<input type="password" name="password" required><br><br><br>
+
+			<div class="check-group">
+				<label class="checkbox-label">
+					<input type="checkbox" name="consent" required>
+					<span>I agree to the processing of my data</span>
+				</label>
+				
+				<label class="checkbox-label">
+					<input type="checkbox" name="not_robot" required>
+					<span>I am not a robot</span>
+				</label>
+			</div>
+			
+			<button type="submit" class="btn btn-full">Sign Up</button>
+
+		</form>
+	</div>
+	
+	<p class="auth-switch">Already have an account? <a href="{{ url_for('auth.login') }}">Login</a></p>
+	
+</div>
+
+{% endblock %}
+

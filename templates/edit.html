@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Appointment{% endblock %}
+
+{% block content %}
+
+<h1>Edit Appointment</h1>
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="card">
+
+    <form id="date-form" method="GET">
+		<label>Date:</label><br>
+        <input type="date"
+               name="date"
+               value="{{ selected_date }}"
+			   min="{{ today }}"
+			   onchange="this.form.submit()"
+               required><br><br>
+	</form>
+	
+	<form method="POST">
+		<label>Name:</label><br>
+		<input name="client_name"
+				value="{{ appt['client_name'] }}"
+				required><br><br>
+				
+		<label>Service:</label><br>
+		<select name="service" required>
+			<option value="">Select service</option>
+			<option value="Haircut" {% if appt['service'] == 'Haircut' %}selected{% endif %}>Haircut</option>
+			<option value="Beard" {% if appt['service'] == 'Beard' %}selected{% endif %}>Beard</option>
+			<option value="Haircut + Beard" {% if appt['service'] == 'Haircut + Beard' %}selected{% endif %}>Haircut + Beard</option>
+		</select><br>
+				
+		<input type="hidden"
+				name="appt_date"
+				value="{{ selected_date }}"><br><br>
+				
+		<label>Time:</label><br>
+		<input type="hidden"
+				name="appt_time"
+				id="selected_time"
+				value="{{ appt['appt_time'] }}">
+				
+		<div class="slots">
+			{% for t in available_slots %}
+				<button type="button"
+						class="slot-btn {% if t == appt['appt_time'] %}slot-active{% endif %}"
+						onclick="selectTime('{{ t }}', this)">
+					{{ t }}
+				</button>
+			{% else %}
+				<p>No available times for this date.</p>
+			{% endfor %}
+		</div>
+		<br><br>
+		
+		<label>Notes:</label><br>
+		<input name="notes"
+				value="{{ appt['notes'] or '' }}"><br><br>
+				
+		<button type="submit">Save Changes</button>
+	</form>
+
+</div>
+
+<p><a href="/appointments">Back to Appointments</a></p>
+
+{% endblock %}

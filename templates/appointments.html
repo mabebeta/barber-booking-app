@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Appointments{% endblock %}
+
+{% block content %}
+
+<h2>Appointments</h2>
+
+{% for barber_name, appts in grouped.items() %}
+    {% set barber = barber_lookup.get(barber_name) %}
+	<div class="card">
+        <div class="barber-hero">
+            {% if barber %}
+				<img class="barber-avatar" src="{{ url_for('static', filename=barber.avatar) }}" alt="{{ barber.name }}">
+			{% endif %}
+			
+			<div>
+				<div class="barber.line">
+					<span class="barber-label">Barber:</span>
+					<span class="barber-name">{{ barber_name }}</span>
+				</div>
+			</div>
+        </div>
+
+        {% if appts %}
+
+            <ul class="appt-list">
+                {% for appt in appts %}
+                    <li  class="appt-item">
+						<div class="appt-main">
+							<div class="appt-row">
+								<div class="appt-left">
+									<div class="appt-date">{{ appt["appt_date_pretty"] }}</div>
+									<div class="appt-time">{{ appt["appt_time"] }} </div>
+								</div>
+								
+								<div class="appt-right">
+									<span class="client-label">Client:</span>
+									<span class="appt-who">{{ appt["client_name"] }}</span>
+									<span class="appt-what">- {{ appt["service"] }}</span>
+								</div>
+							</div>
+							
+							{% if appt["notes"] %}
+								<div class="appt-note">{{ appt["notes"] }}</div>
+							{% endif %}
+						</div>
+                      
+
+                        <div class="actions">
+                            <form method="POST" action="{{ url_for('appointments.delete_appointment', appt_id=appt['id']) }}">
+                                <button type="submit">Delete</button>
+                            </form>
+
+                            <a href="{{ url_for('appointments.edit_appointment', appt_id=appt['id']) }}">Edit</a>
+                        </div>
+
+                    </li>
+                {% endfor %}
+            </ul>
+
+        {% else %}
+            <p>No appointments yet.</p>
+        {% endif %}
+
+    </div>
+
+{% endfor %}
+
+{% endblock %}

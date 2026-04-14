@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}{{ barber.name }}{% endblock %}
+
+{% block content %}
+
+<div class="barber-hero">
+    <img class="barber-avatar"
+         src="{{ url_for('static', filename=barber.avatar) }}"
+         alt="{{ barber.name }}">
+
+    <div>
+        <h1 class="barber-title">{{ barber.name }}</h1>
+    </div>
+</div>
+
+<div class="photo-grid">
+    {% for p in barber.photos %}
+        <img class="barber-photo"
+             src="{{ url_for('static', filename=p) }}"
+             alt="{{ barber.name }}">
+    {% endfor %}
+</div>
+
+<hr>
+
+<h2>Book with {{ barber.name }}</h2>
+
+<form method="GET">
+	<label>Date:</label><br>
+	<input type="date" name="date" value="{{ selected_date }}" min="{{ today }}" onchange="this.form.submit()">
+</form>
+<br>
+
+<form method="POST" action="/">
+
+    <label>Name:</label><br>
+    <input type="text" name="client_name"
+       value="{{ (session.get('first_name') or '') ~ ' ' ~ (session.get('last_name') or '') }}"
+       required><br><br>
+
+    <!-- barber is already known -->
+    <input type="hidden" name="barber" value="{{ barber.name }}">
+
+    <label>Service:</label><br>
+    <select name="service" required>
+		<option value="">Select service</option>
+		<option value="Haircut" {% if service == "Haircut" %}selected{% endif %}>Haircut</option>
+		<option value="Beard" {% if service == "Beard" %}selected{% endif %}>Beard</option>
+		<option value="Haircut + Beard" {% if service == "Haircut + Beard" %}selected{% endif %}>Haircut + Beard</option>
+    </select><br><br>
+	
+	<input type="hidden" name="appt_date" value="{{ selected_date }}">
+	
+	<input type="hidden" id="selected_time" name="appt_time">
+
+    <label>Time:</label><br>
+	
+	<div class="slots">
+		{% for t in available_slots %}
+			<button type="button" class="slot-btn" onclick="selectTime('{{ t }}', this)">{{ t }}</button>
+		{% else %}
+			<p>No available times for this date.</p>
+		{% endfor %}
+	</div><br>
+
+    <label>Notes:</label><br>
+    <textarea name="notes"></textarea><br><br>
+
+    <button type="submit">Book Appointment</button>
+</form>
+
+<hr>
+
+<h3>Upcoming appointments</h3>
+
+{% if appts %}
+    <ul class="appt-list">
+        {% for a in appts %}
+            <li>
+                <span class="appt-when">
+                    {{ a["appt_date"] }} {{ a["appt_time"] }}
+                </span>
+                <span class="appt-who">
+                    - {{ a["client_name"] }}
+                </span>
+                <span class="appt-what">
+                    ({{ a["service"] }})
+                </span>
+
+                {% if a["notes"] %}
+                    <div class="appt-note">
+                        {{ a["notes"] }}
+                    </div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p><em>No appointments yet.</em></p>
+{% endif %}
+
+{% endblock %}

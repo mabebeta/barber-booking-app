@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+	
+	<h1>Admin Dashboard</h1>
+	
+	<div class="dashboard-filters">
+		<div class="quick-filters">
+			<a href="{{ url_for('appointments.dashboard', range='all') }}"
+				class="filter-btn {% if filter_by == 'all' %}active-filter{% endif %}">All Time</a>
+
+			<a href="{{ url_for('appointments.dashboard', range='7') }}"
+				class="filter-btn {% if filter_by == '7' %}active-filter{% endif %}">Last 7 Days</a>
+				
+			<a href="{{ url_for('appointments.dashboard', range='30') }}"
+				class="filter-btn {% if filter_by == '30' %}active-filter{% endif %}">Last 30 Days</a>
+		</div>
+			
+		<form method="GET" action="{{ url_for('appointments.dashboard') }}" class="custom-date-form">
+			
+			<div class="date-group">
+				<label>Start Date:</label>
+				<input type="date" name="start_date" value="{{ start_date }}">
+			</div>
+			
+			<div class="date-group">
+				<label>End Date:</label>
+				<input type="date" name="end_date" value="{{ end_date }}">
+			</div>
+			
+			<button type="submit" class="apply-btn">Apply</button>
+			
+		</form>
+	</div>
+	
+	<div class="dashboard-cards">
+		<div class="dashboard-card">
+			<h3>Total Appointments</h3>
+			<p>{{ total_appts }}</p>
+		</div>
+		
+		<div class="dashboard-card">
+			<h3>Today</h3>
+			<p>{{ today_appts }}</p>
+		</div>
+		
+		<div class="dashboard-card">
+			<h3>Revenue - {{ filter_label }}</h3>
+			<p>${{ "%.2f"|format(total_revenue) }}</p>
+		</div>
+	</div>
+	
+	<div class="dashboard-cards">
+		<div class="dashboard-card">
+			<h3>Top Barber</h3>
+			<p>
+				{% if top_barber %}
+					{{ top_barber["barber"] }} ({{ top_barber["total"] }})
+				{% else %}
+					No data
+				{% endif %}
+			</p>
+		</div>
+		
+		<div class="dashboard-card">
+			<h3>Top Service</h3>
+			<p>
+				{% if top_service %}
+					{{ top_service["service"] }} ({{ top_service["total"] }})
+				{% else %}
+					No data
+				{% endif %}
+			</p>
+		</div>
+	</div>
+	
+	<div class="dashboard-cards">
+		<div class="card">
+			<h3>Busiest Day</h3>
+			<p>
+				{% if busiest_day %}
+					{{ busiest_day["appt_date"] }}
+				{% else %}
+					No data
+				{% endif %}
+			</p>
+		</div>
+		
+		<div class="card">
+			<h3>Busiest Time</h3>
+			<p>
+				{% if busiest_time %}
+					{{ busiest_time["appt_time"] }}
+				{% else %}
+					No data
+				{% endif %}
+			</p>
+		</div>
+	</div>
+	
+	<h2>Appointments per Barber</h2>
+	<div class="analytics-panel">
+		{% for item in barber_stats %}
+			<div class="stat-row">
+				<div class="stat-label">
+					<span>{{ item["barber"] }}</span>
+					<span>{{ item["total"] }}</span>
+				</div>
+			</div>
+			
+			<div class="stat-bar-track">
+				<div class="stat-bar-fill" style="width: {{ (item['total'] / max_barber_total) * 100 }}%;"></div>
+			</div>
+		{% endfor %}
+	</div>
+	
+	<h2>Appointments per Service</h2>
+	<div class="analytics-panel">
+		{% for item in service_stats %}
+			<div class="stat-row">
+				<div class="stat-label">
+					<span>{{ item["service"] }}</span>
+					<span>{{ item["total"] }}</span>
+				</div>
+				
+				<div class="stat-bar-track">
+					<div class="stat-bar-fill service-fill" style="width: {{ (item['total'] / max_service_total) * 100 }}%;"></div>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+	
+	<h2>Revenue per Barber</h2>
+	<div class="analytics-panel">
+		{% for item in barber_revenue %}
+			<div class="stat-row">
+				<div class="stat-label">
+					<span>{{ item["barber"] }}</span>
+					<span>${{ "%.2f"|format(item["total"]) }}</span>
+				</div>
+				
+				<div class="stat-bar-track">
+					<div class="stat-bar-fill"
+						style="width: {{ (item['total'] / barber_revenue[0]['total']) * 100 }}%;">
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+	
+	<h2>Revenue per Service</h2>
+	<div class="analytics-panel">
+		{% for item in service_revenue %}
+			<div class="stat-row">
+				<div class="stat-label">
+					<span>{{ item["service"] }}</span>
+					<span>${{ "%.2f"|format(item["total"]) }}</span>
+				</div>
+				
+				<div class="stat-bar-track">
+					<div class="stat-bar-fill service-fill"
+						style="width: {{ (item['total'] / max_service_revenue) * 100 }}%;">
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+	
+	<h2>Recent Appointments</h2>
+	
+	{% for appt in recent %}
+		<div class="recent-card">
+			<strong>{{ appt["client_name"] }}</strong> - 
+			{{ appt["barber"] }} - 
+			{{ appt["appt_date"] }} at {{ appt["appt_time"] }}
+		</div>
+	{% endfor %}
+	
+</div>
+{% endblock %}

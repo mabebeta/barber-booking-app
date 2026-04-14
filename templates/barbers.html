@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Barbers{% endblock %}
+
+{% block content %}
+
+<h1>Choose Your Barber</h1><br>
+
+<div class="barber-grid">
+    {% for b in barbers %}
+        <a class="barber-card" href="{{ url_for('appointments.barber_profile', barber_id=b.id, service=service) }}">
+
+            <img class="barber-card-avatar"
+                 src="{{ url_for('static', filename=b.avatar) }}"
+                 alt="{{ b.name }}">
+
+            <div class="barber-name">{{ b.name }}</div>
+            <div class="barber-role">{{ b.role }}</div>
+        </a>
+    {% endfor %}
+</div><br>
+
+<div class="home-link-wrap">
+    <a href="{{ url_for('appointments.home') }}" class="cloud-link">
+        ...HOME...
+    </a>
+</div>
+
+{% endblock %}

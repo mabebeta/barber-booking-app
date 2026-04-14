@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block hero %}
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-badge">Fresh cuts - Easy booking</div>
+        <h1 class="hero-title">BOOK CLEAN - LOOK SHARP</h1>
+        <p class="hero-text">
+            Choose your barber, pick a time, and lock it in - Simple.
+        </p>
+
+        
+    </div>
+</section>
+{% endblock %}
+
+
+{% block content %}
+
+<h3 class="services-label">SERVICES</h3>
+<div class="services">
+	
+	<a href="{{ url_for('appointments.barbers', service='Haircut') }}" class="service-card">
+		<h3>Haircut $25.00</h3>
+		<p>Clean fades, classic cuts, and modern styles.</p>
+	</a>
+	
+	<a href="{{ url_for('appointments.barbers', service='Beard') }}" class="service-card">
+		<h3>Beard $18.00</h3>
+		<p>Sharp lines and smooth finishes for your beard.</p>
+	</a>
+	
+	<a href="{{ url_for('appointments.barbers', service='Haircut + Beard') }}" class="service-card">
+		<h3>Haircut + Beard $40.00</h3>
+		<p>Haircut + beard combo for the full look.</p>
+	</a>
+	
+</div><br>
+
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li><b>{{ category }}:</b> {{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<div class="meet-barbers">
+	<a class="btn meet-link cloud-link"  href="{{ url_for('appointments.barbers') }}">...Meet the Barbers...</a>
+</div>
+
+{% endblock %}

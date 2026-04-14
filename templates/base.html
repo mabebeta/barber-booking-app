@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Barber App{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+	{% set active = active|default('') %}
+
+    <nav class="nav">
+        <a class="nav-brand" href="/">
+            <span class="brand-logo"></span>
+            <span class="brand-text">
+                <span class="brand-name">BOOKing.</span>
+                <span class="brand-tagline">A system you may trust.</span>
+            </span>
+        </a>
+
+        <div class="nav-links">
+            <a href="/" class="{% if active == '/' %}active{% endif %}">Book</a>
+            <a href="/barbers" class="{% if active.startswith('/barbers') %}active{% endif %}">Barbers</a>
+            <a href="/appointments" class="{% if active == '/appointments' %}active{% endif %}">Appointments</a>
+			
+			{% if session.get("user_id") %}
+				<span class="nav-user">Hi, {{ session.get("first_name") or session.get("username") }}</span>
+				
+				<form action="{{ url_for('auth.logout') }}" method="POST" class="logout-form">
+					<button class="btn">Logout</button>
+				</form>
+			{% else %}
+				<a href="{{ url_for('auth.login') }}">Login</a>
+				
+				<a href="{{ url_for('auth.signup') }}">Sign Up</a>
+			{% endif %}
+			
+			{% if session.get("user_id") %}
+				<a href="{{ url_for('appointments.dashboard') }}">Dashboard</a>
+			{% endif %}
+			
+        </div>
+    </nav>
+
+    {% block hero %}{% endblock %}
+
+	{% with messages = get_flashed_messages(with_categories=true) %}
+		{% if messages %}
+			<div class="flash-wrap">
+				{% for category, message in messages %}
+					<div class="flash flash-{{ category }}">{{ message }}</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+	{% endwith %}
+
+    <main class="page-container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        const nav = document.querySelector('.nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    </script>
+	
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			setTimeout(() => {
+				document.querySelectorAll(".flash").forEach((el) => {
+					el.classList.add("flash-hide");
+					setTimeout(() => el.remove(), 450);
+				});
+			}, 3000);
+		});
+	</script>
+	
+	<script>
+	function selectTime(time, el) {
+		document.getElementById("selected_time").value = time;
+		
+		document.querySelectorAll(".slot-btn").forEach(b => b.classList.remove("slot-active"));
+		
+		el.classList.add("slot-active");
+	}
+	</script>
+
+</body>
+</html>

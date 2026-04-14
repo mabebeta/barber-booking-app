@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Alfredo's Barber{% endblock %}
+
+{% block content %}
+
+<div class="auth-wrap">
+    
+    <div class="card form-card">
+		<h2>Login</h2>
+
+		{% with messages = get_flashed_messages(with_categories=true) %}
+			{% if messages %}
+				{% for category, message in messages %}
+					<div class="flash {{ category }}">{{ message }}</div>
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
+
+		<form method="POST" class="auth-form">
+			<label for="username">Username</label>
+			<input type="text" name="username" placeholder="Username" required><br><br>
+			
+			<label for="password">Password</label>
+			<input type="password" name="password" placeholder="Password" required><br><br><br>
+			
+			<button type="submit" class="btn btn-full">Login</button>
+		</form>
+	</div>
+	
+	<p class="auth-switch">Don't have an account? <a href="{{ url_for('auth.signup') }}">Sign Up</a></p>
+	
+</div>
+
+{% endblock %}
+
