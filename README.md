@@ -53,34 +53,33 @@ barbers to manage their schedules and view business statistics through an integr
   ![Signup](screenshots/signup.png)
 
 
-  ## Project Structure
-  ``` 
+## Project Structure
+```
   barber-booking-app/
-
-  app.py
-  auth.py
-  appointments.py
-  db.py
-  helpers.py
-  main.py
-
-  templates/
-  base.html
-  index.html
-  login.html
-  signup.html
-  barbers.html
-  barber_profile.html
-  appointments.html
-  edit.html
-  dashboard.html
-
-  static/
-  styles.css
-  barbers/
-
-  database.db (created automatically) 
-  ```
+├── app.py
+├── auth.py
+├── appointments.py
+├── db.py
+├── helpers.py
+├── main.py
+│
+├── templates/
+│   ├── base.html
+│   ├── index.html
+│   ├── login.html
+│   ├── signup.html
+│   ├── barbers.html
+│   ├── barber_profile.html
+│   ├── appointments.html
+│   ├── edit.html
+│   └── dashboard.html
+│
+├── static/
+│   ├── styles.css
+│   └── barbers/
+│
+└── database.db  (created automatically)
+```
 
      
   ## Run Locally
